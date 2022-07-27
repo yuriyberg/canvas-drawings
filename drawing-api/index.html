@@ -14,10 +14,14 @@
         function drawLine(x,y) {
             const angle = -30 * Math.PI/180;
 
+            context.save();
             context.beginPath();
             context.moveTo(x,y);
             context.lineTo(x + Math.cos(angle) * 50, y + Math.sin(angle) * 50);
+            context.strokeStyle='green';
             context.stroke();
+            context.closePath();
+            context.restore();
         }
 
         function drawCircle(x,y,rad,lineWidth = 1) {
