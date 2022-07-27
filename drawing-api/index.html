@@ -10,14 +10,14 @@
     <script>
         const canvas = document.getElementById('c');
         const context = canvas.getContext('2d');
+        let angleDegrees = 1;
 
         function drawLine(x,y) {
-            const angle = -30 * Math.PI/180;
-
+            const angleRadians = -angleDegrees * Math.PI/180;
             context.save();
             context.beginPath();
             context.moveTo(x,y);
-            context.lineTo(x + Math.cos(angle) * 50, y + Math.sin(angle) * 50);
+            context.lineTo(x + Math.cos(angleRadians) * 50, y + Math.sin(angleRadians) * 50);
             context.strokeStyle='green';
             context.stroke();
             context.closePath();
@@ -33,9 +33,15 @@
             context.restore();
         }
 
-        drawCircle(canvas.width/2, canvas.height/2, 50, 2);
-        drawLine(canvas.width/2, canvas.height/2);
-        drawCircle(canvas.width/2, canvas.height/2, 25);
+        (function draw() {
+            window.requestAnimationFrame(draw);
+            context.clearRect(0,0,canvas.width,canvas.height);
+
+            drawCircle(canvas.width/2, canvas.height/2, 50, 2);
+            drawCircle(canvas.width/2, canvas.height/2, 25);
+            drawLine(canvas.width/2, canvas.height/2);
+            angleDegrees++;
+        })();
 
     </script>
 </body>
