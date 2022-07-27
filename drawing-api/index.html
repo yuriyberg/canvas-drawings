@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drawing API</title>
+</head>
+<body>
+    <canvas id="c" width="400" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const context = canvas.getContext('2d');
+
+        function drawLine(x,y) {
+            const angle = -30 * Math.PI/180;
+
+            context.beginPath();
+            context.moveTo(x,y);
+            context.lineTo(x + Math.cos(angle) * 50, y + Math.sin(angle) * 50);
+            context.stroke();
+        }
+
+        function drawCircle(x,y,rad,lineWidth = 1) {
+            context.save();
+            context.beginPath();
+            context.arc(x,y,rad,0,2*Math.PI);
+            context.lineWidth=lineWidth;
+            context.stroke();
+            context.restore();
+        }
+
+        drawCircle(canvas.width/2, canvas.height/2, 50, 2);
+        drawLine(canvas.width/2, canvas.height/2);
+        drawCircle(canvas.width/2, canvas.height/2, 25);
+
+    </script>
+</body>
+</html>
