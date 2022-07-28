@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drawing API</title>
+</head>
+<body>
+<canvas id="c" width="400" height="400"></canvas>
+
+<script>
+    const canvas = document.getElementById('c');
+    const context = canvas.getContext('2d');
+    let x0 = canvas.width/2-150;
+    let y0 = canvas.height/2;
+    let x1 = 0;
+    let y1 = 0;
+    let x2 = canvas.width/2+150;
+    let y2 = canvas.height/2;
+
+    (function draw() {
+        window.requestAnimationFrame(draw);
+        context.clearRect(0,0,canvas.width,canvas.height);
+
+        context.beginPath();
+        context.moveTo(x0, y0);
+        context.quadraticCurveTo(x1||x0,y1||y0, x2,y2);
+        context.stroke();
+    })();
+
+    canvas.addEventListener('mousemove', (event) => {
+        x1 = event.clientX * 2 - (x0 + x2) / 2;
+        y1 = event.clientY * 2 - (y0 + y2) / 2;
+    });
+
+</script>
+</body>
+</html>
