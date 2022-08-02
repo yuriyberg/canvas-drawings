@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+<script>
+    class Circle {
+        constructor(context, ratio, x,y,radius, color) {
+            this.context = context;
+            this.ratio = ratio;
+            this.x = x;
+            this.y = y;
+            this.radius = radius * ratio;
+            this.color = color;
+            this.trailsPathCount=10;
+            this.trails = [];
+        }
+
+        draw() {
+            this.context.beginPath();
+            this.context.arc(this.x, this.y, this.radius, 0, 2*Math.PI, true);
+            this.context.fillStyle = this.color;
+            this.context.fill();
+        }
+
+        drawTrails() {
+            this.trails.forEach(({x, y}, index,array) => {
+                const ratio = (index + 1) / array.length;
+
+                this.context.beginPath();
+                this.context.arc(x,y,this.radius, 0, 2*Math.PI);
+                this.context.fillStyle = "rgba(0, 0, 0, " + ratio / 4 + ")";
+                this.context.fill();
+                this.context.closePath();
+            });
+
+            this.trails.push({
+                x: this.x,
+                y: this.y
+            });
+
+            if (this.trails.length > this.trailsPathCount) {
+                this.trails.shift();
+            }
+        }
+    }
+</script>
+
+<script>
+    const ratio = 2;
+    const canvasUserWidth = 400;
+    const canvasUserHeight = 400;
+
+    const canvas = document.getElementById('canvas');
+    canvas.style.width = canvasUserWidth + 'px';
+    canvas.style.height = canvasUserHeight + 'px';
+    canvas.width = canvasUserWidth * ratio;
+    canvas.height = canvasUserHeight * ratio;
+
+    const context = canvas.getContext('2d');
+    const centerX = canvas.width/2, centerY = canvas.height/2;
+    const circle = new Circle(context, ratio, centerX-170, centerY, 30, 'black');
+
+    (function draw () {
+        window.requestAnimationFrame(draw);
+        context.clearRect(0,0, canvas.width, canvas.height);
+
+        circle.draw();
+        circle.drawTrails();
+    })();
+
+    canvas.addEventListener('mousemove', (event) => {
+        circle.x = event.clientX*ratio;
+        circle.y = event.clientY*ratio;
+    });
+</script>
+</body>
+</html>
