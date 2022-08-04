@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wave motion</title>
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<canvas></canvas>
+
+<script>
+    const canvas = document.querySelector('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const context = canvas.getContext('2d');
+    let frequency = 0.01;
+    let increment = 0.01;
+
+    (function draw () {
+        window.requestAnimationFrame(draw);
+        // context.clearRect(0,0, canvas.width, canvas.height);
+        context.beginPath();
+        context.fillStyle = 'rgba(255,255,255,0.08)';
+        context.fillRect(0,0,canvas.width,canvas.height);
+
+        context.beginPath();
+        context.moveTo(0, canvas.height);
+
+        const ratio = canvas.height / canvas.width;
+
+        for(let i = 0; i < canvas.width; i++) {
+            context.lineTo(i, (canvas.height - i  * ratio) + Math.sin(i * 0.01 + increment) * 100 * Math.sin(increment));
+        }
+
+        context.strokeStyle = `hsl(${Math.sin(increment) * 100}, 50%, 50%)`;
+
+        context.fill();
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(0, canvas.height);
+
+        for(let i = 0; i < canvas.width; i++) {
+            context.lineTo(i, (canvas.height - i) + Math.sin(i * 0.01 + increment) * 100 * Math.sin(increment));
+        }
+
+        context.strokeStyle = `hsl(${Math.sin(increment) * 100}, 100%, 50%)`;
+
+        context.fill();
+        context.stroke();
+
+        increment += frequency;
+    })();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+</body>
+</html>
