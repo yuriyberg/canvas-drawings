@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Percent diagram</title>
+    <style>
+        .regulator {
+            position: fixed;
+            top: 30px;
+        }
+
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+  <canvas></canvas>
+
+  <input type="range" class="regulator" value="0">
+
+  <script>
+    const canvas = document.querySelector('canvas');
+    canvas.width = window.innerWidth * 2;
+    canvas.height = window.innerHeight * 2;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    const context = canvas.getContext('2d');
+
+    const centerX = canvas.width/2;
+    const centerY = canvas.height/2;
+    const cRatio = 2;
+
+    /*
+        * All movement of the progress should be at clockwise direction
+        * -90 degrees equal to 0%
+        * 50% equal to 90 degrees
+        * 100% = -90 degrees
+    */
+    let progress = 25; // Percentage
+    let degreesFromPercent = (percent) => percent/100*360;
+    let radians = (degrees) => degrees * Math.PI/180;
+
+    (function update() {
+        window.requestAnimationFrame(update);
+        context.clearRect(0,0,canvas.width,canvas.height);
+
+        context.save();
+        context.beginPath();
+        context.arc(centerX, centerY, 50 * cRatio, 0, 2*Math.PI);
+        context.lineWidth = 10 * cRatio;
+        context.strokeStyle = '#34495e';
+        context.stroke();
+        context.closePath();
+        context.restore();
+
+        context.save();
+        context.beginPath();
+        context.arc(centerX, centerY, 50 * cRatio, radians(-90), radians(degreesFromPercent(progress)) - radians(90), false);
+        context.lineWidth = 10 * cRatio;
+        context.strokeStyle = '#16a085';
+        context.stroke();
+        context.closePath();
+        context.restore();
+
+        context.beginPath();
+        context.font = `${18 * cRatio}px serif`;
+        context.textAlign = 'center';
+        context.fillText(progress + '%', centerX, centerY)
+    })();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth * cRatio;
+        canvas.height = window.innerHeight * cRatio;
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+    });
+
+    const input = document.querySelector('input');
+
+    input.value = progress;
+
+    input.addEventListener('input', (event) => {
+        progress = event.target.value;
+    });
+  </script>
+</body>
+</html>
