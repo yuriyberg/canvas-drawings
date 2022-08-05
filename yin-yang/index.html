@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Just UI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100&family=Roboto:wght@100;400&display=swap');
+
+        * {
+            margin:0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        canvas {
+            position: absolute;
+        }
+
+        .header {
+            max-width: 1080px;
+            display: flex;
+            padding: 5em 4.8em;
+        }
+
+        article {
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            text-decoration: none;
+            font-size: 2rem;
+            letter-spacing: 8px;
+            font-weight: 100;
+        }
+
+        .body {
+            font-family: 'Roboto', sans-serif;
+            padding: 0 4.8em;
+            height: 100%;
+
+            display: grid;
+            justify-content: end;
+        }
+
+        h2 {
+            color: #fff;
+            font-weight: 100;
+            font-size: 2.5em;
+            line-height: 1.5;
+            letter-spacing: 2px;
+        }
+
+        h2 div {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<canvas></canvas>
+<article>
+    <header class="header">
+        <a href="javascript:void(0);" class="header-logo logo">Canvas</a>
+    </header>
+    <section class="body">
+        <h2>
+            In the <strong>black</strong>, there is some <strong>white</strong>. <br>
+            In the <strong>wrong</strong>, there is some <strong>right</strong>. <br>
+            <div>...</div>
+        </h2>
+    </section>
+</article>
+
+
+<script>
+    const canvas = document.querySelector('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const context = canvas.getContext('2d');
+    let frequency = 0.015;
+    let increment = 0.01;
+
+    (function draw () {
+        window.requestAnimationFrame(draw);
+        context.clearRect(0,0, canvas.width, canvas.height);
+
+        context.save();
+        context.beginPath();
+        context.moveTo(0, canvas.height);
+
+        const ratio = canvas.height / canvas.width;
+
+        for(let i = 0; i < canvas.width; i++) {
+            context.lineTo(i, (canvas.height - i  * ratio) + Math.sin(i * 0.005 + increment) * 100 * Math.sin(increment));
+        }
+
+        context.lineTo(canvas.width, -canvas.height);
+        context.lineTo(0,0);
+        context.lineTo(0, canvas.height);
+        context.fillStyle = '#000';
+        context.fill();
+        context.restore();
+
+        context.save();
+        context.beginPath();
+        context.arc(100, 100, 30, 0, 2*Math.PI);
+        context.fillStyle = '#fff';
+        context.fill();
+        context.restore();
+
+        context.save();
+        context.beginPath();
+        context.arc(canvas.width - 100, canvas.height - 100, 30, 0, 2*Math.PI);
+        context.fillStyle = '#000';
+        context.fill();
+        context.restore();
+
+        increment += frequency;
+    })();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+</body>
+</html>
