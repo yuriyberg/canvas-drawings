@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gravity</title>
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<canvas></canvas>
+
+<script>
+    const canvas = document.querySelector('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const context = canvas.getContext('2d');
+    const centerX = canvas.width/2;
+    const centerY = canvas.height/2;
+
+    class Ball {
+        constructor(context,x,y,dy,radius,fillColor) {
+            this.context = context;
+            this.x = x;
+            this.y = y;
+            this.dy = dy;
+            this.radius = radius;
+            this.fillColor = fillColor;
+        }
+
+
+        draw() {
+            this.gravity();
+            this.context.beginPath();
+            this.context.arc(this.x,this.y,this.radius,0,2*Math.PI);
+            this.context.fillStyle = this.fillColor;
+            this.context.fill();
+        }
+
+        gravity() {
+            if (this.y + this.radius >= canvas.height) {
+                this.dy = -this.dy * 0.9;
+            } else {
+                this.dy += 2;
+            }
+
+            this.y += this.dy;
+        }
+    }
+
+    const ball = new Ball(context, centerX, centerY, 2, 50, 'lightblue');
+
+    (function draw () {
+        window.requestAnimationFrame(draw);
+        context.clearRect(0,0, canvas.width, canvas.height);
+
+        ball.draw();
+    })();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+</body>
+</html>
